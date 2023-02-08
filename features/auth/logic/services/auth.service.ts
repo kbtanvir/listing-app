@@ -93,6 +93,7 @@ export class AuthService {
   }
   async verifyOPT(dto: OPTVerificationDTO) {
     const res = (await httpService.post(APIEndpoints.verifyOPT, dto)) as any;
+    
     if (res.error) {
       throw {
         message: res.data.message,
@@ -103,11 +104,7 @@ export class AuthService {
 
     const session: AuthEntity.session = res.data.tokens;
 
-    authStore.setState((state: any) => ({
-      ...state,
-      session,
-      isAuthenticated: true,
-    }));
+    authStore.setSession(session);
   }
   public getSession(): AuthEntity.session | null {
     return authStore.getState().session;

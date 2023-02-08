@@ -14,7 +14,9 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const isAuthRoute = router.pathname.split("/").includes("auth");
     globalStore.setSidebarToggle(false);
-
+    if (router.pathname === AppRoutes.ResetPassword) {
+      return setChildren(children);
+    }
     if (!isAuthRoute && !isAuthenticated) {
       router.push(AppRoutes.Auth.Login);
       return setChildren(LoadingScreen);
