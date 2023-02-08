@@ -1,4 +1,8 @@
-import { AuthStore } from "../../data/dto/AuthStore";
+export interface JwtPayload {
+  type: string;
+  exp: number;
+  iat: number;
+}
 
 export class JWTService {
   public decodeToken(token: string): any {
@@ -10,7 +14,7 @@ export class JWTService {
   }
 
   public isExpired(token: string): boolean {
-    const user: AuthStore.User = this.decodeToken(token);
+    const user: JwtPayload = this.decodeToken(token);
     const now = new Date().getTime() / 1000;
     return user.exp < now;
   }

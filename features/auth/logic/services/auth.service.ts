@@ -26,9 +26,12 @@ export class AuthService {
   constructor() {}
 
   public async login(dto: LoginDTO) {
-    const res = await httpService.post(APIEndpoints.login, dto);
-    if (!res) return;
+    const res = (await httpService.post(APIEndpoints.login, dto)) as any;
+  
+   
+
     const session: AuthEntity.session = res.data;
+
     this.updateSession(session);
   }
   public async register(dto: LoginDTO) {
@@ -61,11 +64,14 @@ export class AuthService {
     await httpService.post(APIEndpoints.logout);
     this.clearSession();
   }
-  public async updatePassword(dto: ResetPasswordDTO) {
-    const res = (await httpService.post(
-      APIEndpoints.changePassword,
-      dto
-    )) as any;
+  public async resetPassword(dto: ResetPasswordDTO) {
+    const accessToken = authStore.getState().session?.accessToken;
+
+    const user = jwtService.decodeToken(accessToken!);
+    const res = (await httpService.post(APIEndpoints.changePassword, {
+      ...dto,
+      uid: user.id,
+    })) as any;
 
     if (res.error) {
       throw {
@@ -75,25 +81,17 @@ export class AuthService {
       };
     }
 
-    //  temp fix
-
     return res;
   }
   public async requestChangePass(dto: ResetPasswordReqDTO) {
     let res = await httpService.post(APIEndpoints.requestChangePassword, dto);
-    if (res.data.error) {
-      throw {
-        message: res.data.message,
-        error: true,
-        data: null,
-      };
-    }
+
 
     return res.data;
   }
   async verifyOPT(dto: OPTVerificationDTO) {
     const res = (await httpService.post(APIEndpoints.verifyOPT, dto)) as any;
-    
+
     if (res.error) {
       throw {
         message: res.data.message,
@@ -114,7 +112,6 @@ export class AuthService {
   }
   public updateSession(session: AuthEntity.session): AuthEntity.User {
     const user = jwtService.decodeToken(session.accessToken);
-
     authStore.setState((state: any) => ({
       ...state,
       session,

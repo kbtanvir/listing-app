@@ -8,7 +8,6 @@ import { FormFieldHandler } from "../../../lib/atoms/Form/FormFieldHandler";
 import useHookForm, { FormField } from "../../../lib/hooks/useHookForm";
 import { AppRoutes } from "../../../lib/routes/AppRoutes";
 import { ButtonVariant } from "../../../lib/theme/components/Button";
-import { notify } from "../../../lib/utils/helper";
 import { LoginDTO } from "../data/dto/auth.dto";
 import { authService } from "../logic/services/auth.service";
 import AuthLayout from "./AuthLayout/AuthLayout";
@@ -31,41 +30,7 @@ export default function Login() {
 
   const formMutation = useMutation((dto: LoginDTO) => authService.login(dto), {
     onSuccess() {
-      notify({
-        message: t("Login successful"),
-        type: "success",
-      });
-
-      Router.push(AppRoutes.Products.baseURL);
-    },
-    onError(error: any) {
-      switch (error.data) {
-        case "auth/user-not-found":
-          notify({
-            message: t("User not found"),
-            type: "error",
-          });
-          break;
-        case "auth/invalid-email":
-          notify({
-            message: t("Invalid email"),
-            type: "error",
-          });
-          break;
-
-        case "auth/wrong-password":
-          notify({
-            message: t("Wrong password"),
-            type: "error",
-          });
-          break;
-
-        default:
-          notify({
-            message: t(error.message),
-            type: "error",
-          });
-      }
+      Router.push(AppRoutes.Category.baseURL);
     },
   });
 

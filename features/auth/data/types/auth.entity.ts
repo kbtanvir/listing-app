@@ -1,4 +1,4 @@
-import { RolesEnum } from "../../../users/data/users.enitity";
+
 import { AuthDTOs } from "../dto/auth.dto";
 
 export namespace AuthEntity {
@@ -10,7 +10,7 @@ export namespace AuthEntity {
     email: string;
     phone: string;
     isVerified: boolean;
-    role: RolesEnum;
+
   };
 
   export interface Store {

@@ -9,18 +9,20 @@ import useHookForm, { FormField } from "../../../lib/hooks/useHookForm";
 import { AppRoutes } from "../../../lib/routes/AppRoutes";
 import { notify } from "../../../lib/utils/helper";
 import { ResetPasswordDTO } from "../data/dto/auth.dto";
+import { useAuthStore } from "../logic/auth.store";
 import { authService } from "../logic/services/auth.service";
 import AuthLayout from "./AuthLayout/AuthLayout";
 
 export default function PasswordReset() {
   const { t } = useTranslation();
+  const { session, user } = useAuthStore();
 
   // * FORM SERVICE
   // -------------
 
   const formFields: FormField<ResetPasswordDTO>[] = [
     {
-      name: "password",
+      name: "newPassword",
       type: "password",
       label: t("New Password"),
       placeholder: "Enter new password",
@@ -44,14 +46,11 @@ export default function PasswordReset() {
   ];
 
   const formMutation = useMutation(
-    (dto: ResetPasswordDTO) => authService.updatePassword(dto),
+    (dto: ResetPasswordDTO) => authService.resetPassword(dto),
     {
       onSuccess() {
-        notify({
-          message: t("Logged in"),
-          type: "success",
-        });
-        Router.push(AppRoutes.Products.baseURL);
+    
+        Router.push(AppRoutes.Category.baseURL);
       },
     }
   );
@@ -61,8 +60,7 @@ export default function PasswordReset() {
   });
 
   function onSubmit(dto: ResetPasswordDTO) {
-    // formMutation.mutate(dto);
-    Router.push(AppRoutes.Auth.Login);
+    formMutation.mutate(dto);
   }
 
   // * HANDLERS
@@ -104,7 +102,7 @@ export default function PasswordReset() {
             width="full"
             isLoading={formMutation.isLoading}
           >
-            {t("Save my password")}
+            {t("Update password")}
           </Button>
         </VStack>
       </FormProvider>

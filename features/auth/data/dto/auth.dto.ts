@@ -2,6 +2,8 @@ export type AuthDTOs = {
   id: string;
   email: string;
   password: string;
+  oldPassword: string;
+  newPassword: string;
   repeatPassword: string;
   firstName: string;
   lastName: string;
@@ -38,5 +40,8 @@ export type UserDetailsDTO = Pick<
   "id" | "email" | "firstName" | "lastName"
 >;
 export type OPTVerificationDTO = Pick<AuthDTOs, "email" | "code">;
-export type ResetPasswordDTO = Pick<AuthDTOs, "password" | "repeatPassword">;
 export type ResetPasswordReqDTO = Pick<AuthDTOs, "email">;
+export type ResetPasswordDTO = Pick<
+  AuthDTOs,
+  "oldPassword" | "repeatPassword" | "newPassword"
+>;
